@@ -1,21 +1,24 @@
-from flask_restful import Resource
+from flask_restful import Resource, reqparse
+
+parser = reqparse.RequestParser()
+parser.add_argument('username', help='This field cannot be blank', required=True)
+parser.add_argument('password', help='This field cannot be blank', required=True)
 
 
 class UserRegistration(Resource):
-    @staticmethod
-    def post():
-        return {'message': 'User registration'}
+    def post(self):
+        data = parser.parse_args()
+        return data
 
 
 class UserLogin(Resource):
-    @staticmethod
-    def post():
-        return {'message': 'User login'}
+    def post(self):
+        data = parser.parse_args()
+        return data
 
 
 class UserLogoutAccess(Resource):
-    @staticmethod
-    def post():
+    def post(self):
         return {'message': 'User logout'}
 
 
