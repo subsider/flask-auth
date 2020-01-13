@@ -1,9 +1,9 @@
 from flask import Flask
 from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
-import resources
 
 app = Flask(__name__)
+api = Api(app)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -16,8 +16,8 @@ db = SQLAlchemy(app)
 def create_tables():
     db.create_all()
 
+import views, models, resources
 
-api = Api(app)
 
 api.add_resource(resources.UserRegistration, '/registration')
 api.add_resource(resources.UserLogin, '/login')
