@@ -46,7 +46,14 @@ class UserLogin(Resource):
             return {'message': 'User {} does not exist'.format(data['username'])}
 
         if UserModel.verify_hash(data['password'], current_user.password):
-            return {'message': 'Logged in as {}'.format(data['username'])}
+            access_token = create_access_token(identity=data['username'])
+            refresh_token = create_refresh_token(identity=data['username'])
+
+            return {
+                'message': 'Logged in as {}'.format(data['username']),
+                'access_token': access_token,
+                'refresh_token': refresh_token
+            }
 
         return {'message': 'Wrong credentials'}
 
@@ -62,8 +69,14 @@ class UserLogoutRefresh(Resource):
 
 
 class TokenRefresh(Resource):
+    @jwt_refresh_token_required
     def post(self):
-        return {'message': 'Token refresh'}
+        current_user = get_jwt_identity()
+        access_token = create_access_token(identity=current_user)
+        return {
+            'message': 'Token refresh',
+            'access_token': access_token
+        }
 
 
 class AllUsers(Resource):
@@ -75,5 +88,6 @@ class AllUsers(Resource):
 
 
 class SecretResource(Resource):
+    @jwt_required
     def get(self):
         return {'answer': 42}
